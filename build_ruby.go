@@ -33,35 +33,22 @@ var (
 		"centos:6.6":  "centos:6.6",
 	}
 
-	docker_client   *docker.Client
-	docker_endpoint string
-	red             func(string) string
-	green           func(string) string
-	light_green     func(string) string
+	docker_client *docker.Client
+	red           func(string) string
+	green         func(string) string
+	light_green   func(string) string
 )
 
-const image_tag string = "ruby_build"
+const (
+	image_tag       string = "ruby_build"
+	docker_endpoint string = "unix:///var/run/docker.sock"
+)
 
 func init() {
-	u, err := url.Parse(os.Getenv("DOCKER_HOST"))
+	docker_client, err := docker.NewClient(docker_endpoint)
 	if err != nil {
 		panic(err)
 	}
-	u.Scheme = "https"
-	docker_endpoint = u.String()
-
-	c, err := docker.NewClient(docker_endpoint)
-
-	tr, err := NewHTTPSClient(os.Getenv("DOCKER_CERT_PATH"))
-	if err != nil {
-		panic(err)
-	}
-	c.HTTPClient = tr
-
-	if err != nil {
-		panic(err)
-	}
-	docker_client = c
 }
 
 func main() {
