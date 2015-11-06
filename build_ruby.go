@@ -9,7 +9,6 @@ import (
 	"github.com/fsouza/go-dockerclient"
 	"github.com/wsxiaoys/terminal/color"
 	"io"
-	"net/url"
 	"os"
 	"runtime"
 	"strings"
@@ -45,7 +44,8 @@ const (
 )
 
 func init() {
-	docker_client, err := docker.NewClient(docker_endpoint)
+	var err error
+	docker_client, err = docker.NewClient(docker_endpoint)
 	if err != nil {
 		panic(err)
 	}
